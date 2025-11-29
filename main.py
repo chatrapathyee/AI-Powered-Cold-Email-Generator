@@ -40,9 +40,14 @@ if __name__ == "__main__":
     load_dotenv(override=True)
     
     api_key = os.getenv("GROQ_API_KEY")
-    
     if not api_key or api_key == "your_groq_api_key_here":
-        st.error("GROQ_API_KEY not found or invalid in .env file. Please add your API key to the .env file.")
+        try:
+            api_key = st.secrets["GROQ_API_KEY"]
+        except:
+            pass
+
+    if not api_key or api_key == "your_groq_api_key_here":
+        st.error("GROQ_API_KEY not found or invalid. Please add it to .env or Streamlit Secrets.")
         st.stop()
         
     chain = Chain()
