@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 import streamlit as st
 from langchain_community.document_loaders import WebBaseLoader
 
@@ -27,9 +29,19 @@ def create_streamlit_app(llm, portfolio, clean_text):
 
 
 if __name__ == "__main__":
+
+    st.set_page_config(layout="wide", page_title="Cold Email Generator", page_icon="📧")
+    
+    load_dotenv(override=True)
+    
+    api_key = os.getenv("GROQ_API_KEY")
+    
+    if not api_key or api_key == "your_groq_api_key_here":
+        st.error("GROQ_API_KEY not found or invalid in .env file. Please add your API key to the .env file.")
+        st.stop()
+        
     chain = Chain()
     portfolio = Portfolio()
-    st.set_page_config(layout="wide", page_title="Cold Email Generator", page_icon="📧")
     create_streamlit_app(chain, portfolio, clean_text)
 
 
